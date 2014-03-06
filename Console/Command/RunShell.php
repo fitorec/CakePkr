@@ -1,5 +1,4 @@
 <?php
-<?php
 /**
  * A very fast and simple Packer whit git options!
  *
