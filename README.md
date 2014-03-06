@@ -6,7 +6,7 @@ PkrCake
 
 Installation
 ==================================================================
-Use a submodule it's a **good idea**!:
+Use a submodule it's a **good idea**  :smirk:!:
 
     git submodule add https://github.com/fitorec/CakePkr.git [APP]/Plugin/Pkr
 
@@ -26,7 +26,7 @@ Require
 
 ### - [**jsmin-php**](https://github.com/rgrove/jsmin-php/)
 
-You should put JSMin in `[APP]/vendors/jsmin/jsmin.php` by default.
+You should put JSMin in `[APP]/vendors/jsmin/jsmin.php`.
 
 ### - [**CssMin**](http://code.google.com/p/cssmin/)
 
@@ -43,3 +43,4 @@ and enjoy!
 
 Hooksupport
 ==================================================================
+**ups!** :see_no_evil: outstanding functionality.
