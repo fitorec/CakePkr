@@ -6,7 +6,7 @@ PkrCake
 
 Installation
 ==================================================================
-Use a submodule it's a **good idea**  :smirk:!:
+:smirk: Use a submodule it's a **good idea**!:
 
     git submodule add https://github.com/fitorec/CakePkr.git [APP]/Plugin/Pkr
 
@@ -43,4 +43,4 @@ and enjoy!
 
 Hooksupport
 ==================================================================
-**ups!** :see_no_evil: outstanding functionality.
+:see_no_evil: **UPS!** outstanding functionality.
