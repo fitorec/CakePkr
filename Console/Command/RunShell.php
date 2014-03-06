@@ -1,9 +1,19 @@
 <?php
-/*
+<?php
+/**
  * A very fast and simple Packer whit git options!
  *
- * Please read:
- *  https://github.com/fitorec/CakePkr
+ * PHP versions 4 and 5
+ *
+ * @author    @fitorec
+ * @copyright 2014-2015 Miguel Angel Marcial Martinez
+ * @version   0.1
+ * @link      https://github.com/fitorec/CakePkr
+ * @since     0.1
+ *
+ * More information please read:
+ *
+ *    https://github.com/fitorec/CakePkr
  */
 
 App::uses('AppShell', 'Console/Command');
@@ -13,38 +23,32 @@ class RunShell extends AppShell {
 
   public function main() {
     if(isset($this->args[0])) {
-       $this->asignerFilePkr($this->args[0]);
+       $this->dispatchPkr($this->args[0]);
     } else {
       $this->checkGitSystem();
     }
   }
 
-  /**
-   * Check our file system
-   *
-   * @param tipo $parametro1 descripción del párametro 1.
-   * @return tipo descripcion de lo que regresa
-   * @access publico/privado
-   * @link [URL de mayor infor]
-  */
-    function checkGitSystem() {
-      //Revisar si recibe como argumento mysqldump exporta las bases
-      $cmd = 'git status --porcelain | grep "^[A| M]" | cut -c 4-';
-      $modificados = explode("\n", shell_exec($cmd));
-      foreach ($modificados as $fileName) {
-        $this->asignerFilePkr($fileName);
-      }
-    }//end function
+/**
+ * Check our file system
+ *
+ */
+  function checkGitSystem() {
+    $cmd = 'git status --porcelain | grep "^[A| M]" | cut -c 4-';
+    $modificados = explode("\n", shell_exec($cmd));
+    foreach ($modificados as $fileName) {
+      $this->dispatchPkr($fileName);
+    }
+  }//end function
 
 /**
- * Descripción de la función
+ * Dispatcher fileFullPath
  *
- * @param tipo $parametro1 descripción del párametro 1.
- * @return tipo descripcion de lo que regresa
- * @access publico/privado
- * @link [URL de mayor infor]
+ * @param String $fileFullPath the file.
+ * @return success
+ * @access public
  */
-  function asignerFilePkr($fileFullPath) {
+  function dispatchPkr($fileFullPath) {
     if(!file_exists($fileFullPath)) {
       return false;
     }
@@ -78,7 +82,6 @@ class RunShell extends AppShell {
     if (!class_exists('CssMin') and !$this->loadCssMin()) {
       return false;
     }
-    //Generamos el nuevo nombre del archivo y el contendio
     $newFile = preg_replace('/\.less$/', '.min.css', $fileName);
     $less = new lessc;
     try {
@@ -100,17 +103,14 @@ class RunShell extends AppShell {
  * @return success
  */
   function checkCss($fileName) {
-    //Si el archivo modificado ya es compacto no hacer nada
     if(preg_match('/\.min\.css$/', $fileName)) {
       return false;
     }
     if (!class_exists('CssMin') and !$this->loadCssMin()) {
       return false;
     }
-    //Generamos el nuevo nombre del archivo y el contendio
     $newFile = preg_replace('/\.css$/', '.min.css', $fileName);
     $newContent = CssMin::minify(file_get_contents($fileName));
-    //Finalmente con esta información generamos el archivo
     if($this->write($newFile, $newContent)){
       $this->showExport($fileName, $newFile);
       return true;
@@ -123,17 +123,14 @@ class RunShell extends AppShell {
  * @return success
  */
   function checkJs($fileName) {
-    //Si el archivo modificado ya es compacto no hacer nada
     if(preg_match('/\.min\.js$/', $fileName)) {
       return false;
     }
     if (!class_exists('JSMin') and !$this->loadJsMin()) {
       return false;
     }
-    //Generamos el nuevo nombre del archivo y el contendio
     $newFile = preg_replace('/\.js$/', '.min.js', $fileName);
     $newContent = JSMin::minify(file_get_contents($fileName));
-    //Finalmente con esta información generamos el archivo
     if($this->write($newFile, $newContent)){
       $this->showExport($fileName, $newFile);
       return true;
@@ -142,10 +139,10 @@ class RunShell extends AppShell {
   }
 
 /**
- * Escribe el contenido $content en el archivo ($filename)
+ * Writes compiled assets to the filesystem
  *
- * @param string $filename El archivo a escribir
- * @param string $contents El contenido a escribi
+ * @param string $filename The filename to write.
+ * @param string $contents The contents to write.
  * @throws RuntimeException
  */
   public function write($filename, $content) {
@@ -158,10 +155,8 @@ class RunShell extends AppShell {
     return file_put_contents($filename, $content) !== false;
   }
 
-
 /**
  * Load the less compiler
- *
  */
   public function loadLessCompiler() {
     App::import('Vendor', 'lessc', array('file' => 'lessphp/lessc.inc.php'));
@@ -173,8 +168,7 @@ class RunShell extends AppShell {
   }
 
 /**
- * Carga la libreria CSSMin en caso de usarse :¬)
- *
+ * Load cssmin library
  */
   public function loadCssMin() {
     App::import('Vendor', 'cssmin', array('file' => 'cssmin/CssMin.php'));
@@ -186,7 +180,7 @@ class RunShell extends AppShell {
   }
 
 /**
- * Carga la libreria JSMin en caso de usarse :¬)
+ * Load jsmin library
  */
   public function loadJsMin() {
     App::import('Vendor', 'jsmin', array('file' => 'jsmin/jsmin.php'));
@@ -197,13 +191,15 @@ class RunShell extends AppShell {
     return true;
   }
 
-
 /**
- * Muestra la generación de una nueva exportación
+ * Show fancy information the how $file_org generate $file_dst
+ *
+ * Example out:      $file_org -> $file_dst
  */
   function showExport($file_org, $file_dst) {
     $this->out($file_org, 0);
     $this->out('<warning> -> </warning>', 0);
     $this->out("<question>{$file_dst}</question>");
   }//end function
-}
+
+}//end RunShell
