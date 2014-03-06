@@ -52,15 +52,37 @@ class RunShell extends AppShell {
         if(preg_match('/\.ctp$/', $fileFullPath)) { // .ctp case
           //$this->out($fileFullPath);
         }
-        //Soporte .css
+        //Support .css
         if(preg_match('/\.css$/', $fileFullPath)) {
           return $this->checkCss($fileFullPath);
         }
-        //Soporte .js
+        //Support .less
+        if(preg_match('/\.less$/', $fileFullPath)) {
+          return $this->checkLess($fileFullPath);
+        }
+        //Support .js
         if(preg_match('/\.js$/', $fileFullPath)) {
           return $this->checkJs($fileFullPath);
         }
     }//end function
+
+    /**
+     * Genera archivos CSS en formato compacto!
+     *
+     */
+    function checkLess($fileName) {
+      if (!class_exists('lessc')) {
+        $this->loadLessCompiler();
+      }
+      //Generamos el nuevo nombre del archivo y el contendio
+      $newFile = preg_replace('/\.less$/', '.min.css', $fileName);
+      $less = new lessc;
+      $newContent = $less->compile(file_get_contents($fileName));
+      //Finalmente con esta información generamos el archivo
+      if($this->write($newFile, $newContent)){
+        $this->showExport($fileName, $newFile);
+      }
+    }
 
     /**
      * Genera archivos CSS en formato compacto!
@@ -120,6 +142,18 @@ class RunShell extends AppShell {
     exec("git add '{$filename}'");
 		return file_put_contents($filename, $content) !== false;
 	}
+
+
+/**
+ * Load the less compiler
+ *
+ */
+  public function loadLessCompiler() {
+    App::import('Vendor', 'cssmin', array('file' => 'lessphp/lessc.inc.php'));
+    if (!class_exists('lessc')) {
+      throw new Exception(sprintf('Cannot not load filter class "%s".', 'lessc'));
+    }
+  }
 
 /**
  * Carga la libreria CSSMin en caso de usarse :¬)

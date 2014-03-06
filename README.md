@@ -32,9 +32,14 @@ You should put JSMin in `[APP]/vendors/jsmin/jsmin.php`.
 
 The CSSMin library should be placed in `[APP]/vendors/cssmin/CssMin.php`.
 
+### - [**LessPhp**](http://leafo.net/lessphp/)
 
+You should installed LessPHP in  `[APP]/vendors/lessphp/lessc.inc.php`
+
+ 
 Use
 ==================================================================
+
 use:
 
     git pkr
