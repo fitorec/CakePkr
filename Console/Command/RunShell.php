@@ -1,6 +1,7 @@
 <?php
 /*
- * ¡A very fast and simple packer whit git options!
+ * A very fast and simple Packer whit git options!
+ *
  * Please read:
  *  https://github.com/fitorec/CakePkr
  */
@@ -19,7 +20,7 @@ class RunShell extends AppShell {
   }
 
   /**
-   * Descripción de la función
+   * Check our file system
    *
    * @param tipo $parametro1 descripción del párametro 1.
    * @return tipo descripcion de lo que regresa
@@ -31,104 +32,114 @@ class RunShell extends AppShell {
       $cmd = 'git status --porcelain | grep "^[A| M]" | cut -c 4-';
       $modificados = explode("\n", shell_exec($cmd));
       foreach ($modificados as $fileName) {
-        echo $fileName."\n";
         $this->asignerFilePkr($fileName);
       }
     }//end function
 
-    /**
-     * Descripción de la función
-     *
-     * @param tipo $parametro1 descripción del párametro 1.
-     * @return tipo descripcion de lo que regresa
-     * @access publico/privado
-     * @link [URL de mayor infor]
-     */
-    function asignerFilePkr($fileFullPath) {
-        if(!file_exists($fileFullPath)) {
-          return false;
-        }
-        //Soport .ctp
-        if(preg_match('/\.ctp$/', $fileFullPath)) { // .ctp case
-          //$this->out($fileFullPath);
-        }
-        //Support .css
-        if(preg_match('/\.css$/', $fileFullPath)) {
-          return $this->checkCss($fileFullPath);
-        }
-        //Support .less
-        if(preg_match('/\.less$/', $fileFullPath)) {
-          return $this->checkLess($fileFullPath);
-        }
-        //Support .js
-        if(preg_match('/\.js$/', $fileFullPath)) {
-          return $this->checkJs($fileFullPath);
-        }
-    }//end function
-
-    /**
-     * Genera archivos CSS en formato compacto!
-     *
-     */
-    function checkLess($fileName) {
-      if (!class_exists('lessc')) {
-        $this->loadLessCompiler();
-      }
-      //Generamos el nuevo nombre del archivo y el contendio
-      $newFile = preg_replace('/\.less$/', '.min.css', $fileName);
-      $less = new lessc;
-      try {
-        $newContent = $less->compile(file_get_contents($fileName));
-        //Finalmente con esta información generamos el archivo
-        if($this->write($newFile, $newContent)){
-          $this->showExport($fileName, $newFile);
-        }
-      } catch (exception $e) {
-        throw new Exception($e->getMessage());
-      }
+/**
+ * Descripción de la función
+ *
+ * @param tipo $parametro1 descripción del párametro 1.
+ * @return tipo descripcion de lo que regresa
+ * @access publico/privado
+ * @link [URL de mayor infor]
+ */
+  function asignerFilePkr($fileFullPath) {
+    if(!file_exists($fileFullPath)) {
+      return false;
     }
+    //Sopport .ctp
+    if(preg_match('/\.ctp$/', $fileFullPath)) { // .ctp case
+      //$this->out($fileFullPath);
+    }
+    //Support .css
+    if(preg_match('/\.css$/', $fileFullPath)) {
+      return $this->checkCss($fileFullPath);
+    }
+    //Support .less
+    if(preg_match('/\.less$/', $fileFullPath)) {
+      return $this->checkLess($fileFullPath);
+    }
+    //Support .js
+    if(preg_match('/\.js$/', $fileFullPath)) {
+      return $this->checkJs($fileFullPath);
+    }
+  }//end function
 
-    /**
-     * Genera archivos CSS en formato compacto!
-     *
-     */
-    function checkCss($fileName) {
-      //Si el archivo modificado ya es compacto no hacer nada
-      if(preg_match('/\.min\.css$/', $fileName)) {
-        return;
-      }
-      if (!class_exists('CssMin')) {
-        $this->loadCssMin();
-      }
-      //Generamos el nuevo nombre del archivo y el contendio
-      $newFile = preg_replace('/\.css$/', '.min.css', $fileName);
-      $newContent = CssMin::minify(file_get_contents($fileName));
-      //Finalmente con esta información generamos el archivo
+/**
+ * Apply lessc compiler to $fileName
+ *
+ * @return success
+ */
+  function checkLess($fileName) {
+    if (!class_exists('lessc') and !$this->loadLessCompiler()) {
+      return false;
+    }
+    if (!class_exists('CssMin') and !$this->loadCssMin()) {
+      return false;
+    }
+    //Generamos el nuevo nombre del archivo y el contendio
+    $newFile = preg_replace('/\.less$/', '.min.css', $fileName);
+    $less = new lessc;
+    try {
+      $newContent = $less->compile(file_get_contents($fileName));
+      $newContent = CssMin::minify($newContent);
       if($this->write($newFile, $newContent)){
         $this->showExport($fileName, $newFile);
+        return true;
       }
+    } catch (exception $e) {
+      throw new Exception($e->getMessage());
     }
+    return false;
+  }
 
-    /**
-     * Genera archivos CSS en formato compacto!
-     *
-     */
-    function checkJs($fileName) {
-      //Si el archivo modificado ya es compacto no hacer nada
-      if(preg_match('/\.min\.js$/', $fileName)) {
-        return;
-      }
-      if (!class_exists('JSMin')) {
-        $this->loadJsMin();
-      }
-      //Generamos el nuevo nombre del archivo y el contendio
-      $newFile = preg_replace('/\.js$/', '.min.js', $fileName);
-      $newContent = JSMin::minify(file_get_contents($fileName));
-      //Finalmente con esta información generamos el archivo
-      if($this->write($newFile, $newContent)){
-        $this->showExport($fileName, $newFile);
-      }
+/**
+ * Apply CssMin to $fileName
+ *
+ * @return success
+ */
+  function checkCss($fileName) {
+    //Si el archivo modificado ya es compacto no hacer nada
+    if(preg_match('/\.min\.css$/', $fileName)) {
+      return false;
     }
+    if (!class_exists('CssMin') and !$this->loadCssMin()) {
+      return false;
+    }
+    //Generamos el nuevo nombre del archivo y el contendio
+    $newFile = preg_replace('/\.css$/', '.min.css', $fileName);
+    $newContent = CssMin::minify(file_get_contents($fileName));
+    //Finalmente con esta información generamos el archivo
+    if($this->write($newFile, $newContent)){
+      $this->showExport($fileName, $newFile);
+      return true;
+    }
+  }
+
+/**
+ * Apply JsMin to $fileName.
+ *
+ * @return success
+ */
+  function checkJs($fileName) {
+    //Si el archivo modificado ya es compacto no hacer nada
+    if(preg_match('/\.min\.js$/', $fileName)) {
+      return false;
+    }
+    if (!class_exists('JSMin') and !$this->loadJsMin()) {
+      return false;
+    }
+    //Generamos el nuevo nombre del archivo y el contendio
+    $newFile = preg_replace('/\.js$/', '.min.js', $fileName);
+    $newContent = JSMin::minify(file_get_contents($fileName));
+    //Finalmente con esta información generamos el archivo
+    if($this->write($newFile, $newContent)){
+      $this->showExport($fileName, $newFile);
+      return true;
+    }
+    return false;
+  }
 
 /**
  * Escribe el contenido $content en el archivo ($filename)
@@ -137,15 +148,15 @@ class RunShell extends AppShell {
  * @param string $contents El contenido a escribi
  * @throws RuntimeException
  */
- public function write($filename, $content) {
+  public function write($filename, $content) {
     $path = realpath(dirname($filename));
-
-		if (!is_writable($path)) {
-			throw new RuntimeException('The path: ' . $path . ' not is write');
-		}
+    if (!is_writable($path)) {
+      throw new RuntimeException('The path: ' . $path . ' not is write');
+      return false;
+    }
     exec("git add '{$filename}'");
-		return file_put_contents($filename, $content) !== false;
-	}
+    return file_put_contents($filename, $content) !== false;
+  }
 
 
 /**
@@ -153,10 +164,12 @@ class RunShell extends AppShell {
  *
  */
   public function loadLessCompiler() {
-    App::import('Vendor', 'cssmin', array('file' => 'lessphp/lessc.inc.php'));
+    App::import('Vendor', 'lessc', array('file' => 'lessphp/lessc.inc.php'));
     if (!class_exists('lessc')) {
-      throw new Exception(sprintf('Cannot not load filter class "%s".', 'lessc'));
+      throw new Exception(sprintf('Cannot not load class "%s".', 'lessc'));
+      return false;
     }
+    return true;
   }
 
 /**
@@ -166,24 +179,28 @@ class RunShell extends AppShell {
   public function loadCssMin() {
     App::import('Vendor', 'cssmin', array('file' => 'cssmin/CssMin.php'));
     if (!class_exists('CssMin')) {
-      throw new Exception(sprintf('Cannot not load filter class "%s".', 'CssMin'));
+      throw new Exception(sprintf('Cannot not load class "%s".', 'CssMin'));
+      return false;
     }
+    return true;
   }
 
-  /**
-   * Carga la libreria JSMin en caso de usarse :¬)
-   */
+/**
+ * Carga la libreria JSMin en caso de usarse :¬)
+ */
   public function loadJsMin() {
     App::import('Vendor', 'jsmin', array('file' => 'jsmin/jsmin.php'));
     if (!class_exists('JSMin')) {
-      throw new Exception(sprintf('Cannot not load filter class "%s".', 'CssMin'));
+      throw new Exception(sprintf('Cannot not load class "%s".', 'JSMin'));
+      return false;
     }
+    return true;
   }
 
-    
-  /**
-   * Muestra la generación de una nueva exportación
-   */
+
+/**
+ * Muestra la generación de una nueva exportación
+ */
   function showExport($file_org, $file_dst) {
     $this->out($file_org, 0);
     $this->out('<warning> -> </warning>', 0);
