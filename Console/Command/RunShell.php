@@ -77,10 +77,14 @@ class RunShell extends AppShell {
       //Generamos el nuevo nombre del archivo y el contendio
       $newFile = preg_replace('/\.less$/', '.min.css', $fileName);
       $less = new lessc;
-      $newContent = $less->compile(file_get_contents($fileName));
-      //Finalmente con esta información generamos el archivo
-      if($this->write($newFile, $newContent)){
-        $this->showExport($fileName, $newFile);
+      try {
+        $newContent = $less->compile(file_get_contents($fileName));
+        //Finalmente con esta información generamos el archivo
+        if($this->write($newFile, $newContent)){
+          $this->showExport($fileName, $newFile);
+        }
+      } catch (exception $e) {
+        throw new Exception($e->getMessage());
       }
     }
 
