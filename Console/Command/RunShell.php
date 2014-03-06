@@ -26,7 +26,7 @@ class RunShell extends AppShell {
     } else {
       $this->checkGitSystem();
     }
-  }
+  }//end main
 
 /**
  * Check our file system
@@ -38,7 +38,7 @@ class RunShell extends AppShell {
     foreach ($modificados as $fileName) {
       $this->dispatchPkr($fileName);
     }
-  }//end function
+  }//end checkGitSystem
 
 /**
  * Dispatcher fileFullPath
@@ -67,7 +67,7 @@ class RunShell extends AppShell {
     if(preg_match('/\.js$/', $fileFullPath)) {
       return $this->checkJs($fileFullPath);
     }
-  }//end function
+  }//end dispatchPkr
 
 /**
  * Apply lessc compiler to $fileName
@@ -94,7 +94,7 @@ class RunShell extends AppShell {
       throw new Exception($e->getMessage());
     }
     return false;
-  }
+  }//end checkLess
 
 /**
  * Apply CssMin to $fileName
@@ -114,7 +114,7 @@ class RunShell extends AppShell {
       $this->showExport($fileName, $newFile);
       return true;
     }
-  }
+  }//end checkCss
 
 /**
  * Apply JsMin to $fileName.
@@ -135,7 +135,7 @@ class RunShell extends AppShell {
       return true;
     }
     return false;
-  }
+  }//end checkJs
 
 /**
  * Writes compiled assets to the filesystem
@@ -152,7 +152,7 @@ class RunShell extends AppShell {
     }
     exec("git add '{$filename}'");
     return file_put_contents($filename, $content) !== false;
-  }
+  }//end write
 
 /**
  * Load the less compiler
@@ -164,7 +164,7 @@ class RunShell extends AppShell {
       return false;
     }
     return true;
-  }
+  }//end loadLessCompiler
 
 /**
  * Load cssmin library
@@ -176,7 +176,7 @@ class RunShell extends AppShell {
       return false;
     }
     return true;
-  }
+  }//end loadCssMin
 
 /**
  * Load jsmin library
@@ -188,7 +188,7 @@ class RunShell extends AppShell {
       return false;
     }
     return true;
-  }
+  }//end loadJsMin
 
 /**
  * Show fancy information the how $file_org generate $file_dst
@@ -199,6 +199,6 @@ class RunShell extends AppShell {
     $this->out($file_org, 0);
     $this->out('<warning> -> </warning>', 0);
     $this->out("<question>{$file_dst}</question>");
-  }//end function
+  }//end showExport
 
-}//end RunShell
+}//end RunShell Class
