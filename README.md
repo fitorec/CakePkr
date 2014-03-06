@@ -8,17 +8,17 @@ Installation
 ==================================================================
 Use a submodule it's a **good idea**!:
 
-  git submodule add https://github.com/fitorec/CakePkr.git [APP]/Plugin/Pkr
+    git submodule add https://github.com/fitorec/CakePkr.git [APP]/Plugin/Pkr
 
 Config cakephp, you'll need to load the plugin:
 
-  // in app/Config/bootstrap.php
-  CakePlugin::load('Pkr');
+    // in app/Config/bootstrap.php
+    CakePlugin::load('Pkr');
 
 
 Adding a alias for git:
 
-  git config alias.pkr '!php [APP]/Console/cake.php Pkr.run'
+    git config alias.pkr '!php [APP]/Console/cake.php Pkr.run'
 
 
 Require
@@ -36,9 +36,10 @@ The CSSMin library should be placed in `[APP]/vendors/cssmin/CssMin.php`.
 Use
 ==================================================================
 use:
-  git pkr
+
+    git pkr
+
 and enjoy!
 
 Hooksupport
 ==================================================================
-
