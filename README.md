@@ -41,6 +41,6 @@ use:
 
 and enjoy!
 
-Hooksupport
+Hooks Support
 ==================================================================
 :see_no_evil: **UPS!** outstanding functionality.
