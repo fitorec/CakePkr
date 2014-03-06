@@ -36,12 +36,15 @@ The CSSMin library should be placed in `[APP]/vendors/cssmin/CssMin.php`.
 
 You should installed LessPHP in  `[APP]/vendors/lessphp/lessc.inc.php`
 
- 
+
 Use
 ==================================================================
 
 use:
 
+    #check status file system
+    git status
+    # run alias Packer!
     git pkr
 
 and enjoy!
