@@ -82,10 +82,10 @@ class RunShell extends AppShell {
       return false;
     }
     $newFile = preg_replace('/\.less$/', '.min.css', $fileName);
-    $less = new lessc;
+
+    $less = new lessc($fileName);
     try {
-      $newContent = $less->compile(file_get_contents($fileName));
-      $newContent = CssMin::minify($newContent);
+      $newContent = CssMin::minify($less->parse());
       if($this->write($newFile, $newContent)){
         $this->showExport($fileName, $newFile);
         return true;
