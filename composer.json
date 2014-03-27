@@ -17,7 +17,8 @@
     "support"      : {
         "issues"   : "https://github.com/fitorec/CakePkr/issues",
         "forum"    : "https://github.com/fitorec/CakePkr/wiki",
-        "source"   : "https://github.com/fitorec/CakePkr/"
+        "source"   : "https://github.com/fitorec/CakePkr/",
+        "email"    : "chanerec@gmail.com"
     },
     "repositories" : [
     {
