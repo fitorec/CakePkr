@@ -1,0 +1,34 @@
+{
+    "name"         : "cakephp/pkr",
+    "description"  : "¡A very fast and simple packer for cakePHP whit git options!",
+    "type"         : "library",
+    "keywords"     : ["packer", "cakephp", "javascript", "css", "less", "coffescript"],
+    "homepage"     : "https://github.com/fitorec/CakePkr",
+    "license"      : "MIT",
+    "config"       : {
+      "vendor-dir" : "Vendor"
+    },
+    "authors"      : [
+        {
+            "name"     : "fitorec",
+            "homepage" : "https://github.com/fitorec"
+        }
+    ],
+    "support"      : {
+        "issues"   : "https://github.com/fitorec/CakePkr/issues",
+        "forum"    : "https://github.com/fitorec/CakePkr/wiki",
+        "source"   : "https://github.com/fitorec/CakePkr/"
+    },
+    "repositories" : [
+    {
+      "name"       : "jsmin",
+      "type"       : "git",
+      "reference"  : "master",
+      "url"        :  "https://github.com/rgrove/jsmin-php.git"
+    }
+    ],
+    "require"      : {
+        "php"      : ">=5.3",
+        "jsmin"    : "master"
+    }
+}

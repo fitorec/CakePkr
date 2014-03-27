@@ -52,3 +52,11 @@ and enjoy!
 Hooks Support
 ==================================================================
 :see_no_evil: **UPS!** outstanding functionality.
+
+
+Composer Support
+==================================================================
+:see_no_evil: **UPS!** outstanding functionality:
+
+> please read: <https://getcomposer.org/doc/>
+
