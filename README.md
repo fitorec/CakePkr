@@ -56,7 +56,15 @@ Hooks Support
 
 Composer Support
 ==================================================================
-:see_no_evil: **UPS!** outstanding functionality:
+
+trying with:
+
+    composer.phar -v install
+Out:
+    [Composer\Repository\InvalidRepositoryException]
+  
+    No valid composer.json was found in any branch or tag of https://github.com/rgrove/jsmin-php.git, could not load a package from it. 
+
+:see_no_evil: **Sorry!**
 
 > please read: <https://getcomposer.org/doc/>
-
